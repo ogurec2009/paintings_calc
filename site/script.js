@@ -95,7 +95,7 @@ async function sendData() {
     resultTextElement.style.color = "var(--secondary-color)";
 
     try {
-        const response = await fetch("https://api-paintings.duckdns.org/api/pack", {
+        const response = await fetch("http://127.0.0.1:8000/api/pack", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ canvas_width: canvasWidth, paintings: paintings })
@@ -144,10 +144,10 @@ function drawCanvas(canvasWidth, layout, canvasLength) {
         const color = `hsl(${(index * 37) % 360}, 60%, 75%)`;
 
         const marginRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        marginRect.setAttribute("x", item.x + 0.1);
-        marginRect.setAttribute("y", item.y + 0.1);
-        marginRect.setAttribute("width", item.width - 0.2);
-        marginRect.setAttribute("height", item.height - 0.2);
+        marginRect.setAttribute("x", item.x + 0.05);
+        marginRect.setAttribute("y", item.y + 0.05);
+        marginRect.setAttribute("width", item.width - 0.1);
+        marginRect.setAttribute("height", item.height - 0.1);
         marginRect.setAttribute("fill", "none");
         marginRect.setAttribute("stroke", "#999");
         marginRect.setAttribute("stroke-dasharray", "0.01 0.02");

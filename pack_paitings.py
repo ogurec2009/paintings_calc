@@ -2,7 +2,7 @@ from typing import List, Tuple
 from itertools import product
 
 def add_margins(w: float, h: float) -> Tuple[float, float]:
-    return w + 0.2, h + 0.2
+    return w + 0.1, h + 0.1
 
 def try_layout(canvas_width: float, max_height: float, paintings: List[Tuple[float, float]], rotation_mask: List[bool]) -> List[dict]:
     paintings_with_margin = []
