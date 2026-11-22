@@ -1,15 +1,17 @@
 from typing import List, Tuple
 from itertools import product
 
-def add_margins(w: float, h: float) -> Tuple[float, float]:
-    return w + 0.1, h + 0.1
+DEFAULT_OFFSET = 0.05  # 5 см с каждой стороны
 
-def try_layout(canvas_width: float, max_height: float, paintings: List[Tuple[float, float]], rotation_mask: List[bool]) -> List[dict]:
+def add_margins(w: float, h: float, offset: float = DEFAULT_OFFSET) -> Tuple[float, float]:
+    return w + 2 * offset, h + 2 * offset
+
+def try_layout(canvas_width: float, max_height: float, paintings: List[Tuple[float, float]], rotation_mask: List[bool], offset: float = DEFAULT_OFFSET) -> List[dict]:
     paintings_with_margin = []
     for i, (w, h) in enumerate(paintings):
         if rotation_mask[i]:
             w, h = h, w
-        w, h = add_margins(w, h)  # добавляем по 0.1 м с каждой стороны
+        w, h = add_margins(w, h, offset)  # добавляем отступ с каждой стороны
         paintings_with_margin.append({
             "index": i,
             "width": w,
@@ -58,7 +60,7 @@ def try_layout(canvas_width: float, max_height: float, paintings: List[Tuple[flo
 
     return layout
 
-def find_min_canvas_length(canvas_width: float, paintings: List[Tuple[float, float]]) -> Tuple[float, List[dict]]:
+def find_min_canvas_length(canvas_width: float, paintings: List[Tuple[float, float]], offset: float = DEFAULT_OFFSET) -> Tuple[float, List[dict]]:
     low = 0.1
     high = 20.0
     best_layout = None
@@ -68,7 +70,7 @@ def find_min_canvas_length(canvas_width: float, paintings: List[Tuple[float, flo
         mid = (low + high) / 2
         found_layout = None
         for rotation_mask in product([False, True], repeat=len(paintings)):
-            layout = try_layout(canvas_width, mid, paintings, rotation_mask)
+            layout = try_layout(canvas_width, mid, paintings, rotation_mask, offset)
             if layout is not None and len(layout) == len(paintings):  
                 found_layout = layout
                 break

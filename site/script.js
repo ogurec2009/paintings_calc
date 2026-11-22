@@ -70,6 +70,7 @@ function collectPaintings() {
 
 async function sendData() {
     const canvasWidth = parseFloat(document.getElementById("canvasWidth").value);
+    const offsetCm = parseFloat(document.getElementById("paintingOffset").value);
     const paintings = collectPaintings();
     const resultTextElement = document.getElementById("resultText");
 
@@ -91,6 +92,14 @@ async function sendData() {
         return;
     }
 
+    if (isNaN(offsetCm) || offsetCm < 0) {
+        resultTextElement.textContent = "Пожалуйста, введите корректный неотрицательный отступ.";
+        resultTextElement.style.color = "var(--danger-color)";
+        return;
+    }
+
+    const offset = offsetCm / 100; // сантиметры -> метры
+
     resultTextElement.textContent = "Выполняется расчет...";
     resultTextElement.style.color = "var(--secondary-color)";
 
@@ -98,7 +107,7 @@ async function sendData() {
         const response = await fetch("http://127.0.0.1:8000/api/pack", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ canvas_width: canvasWidth, paintings: paintings })
+            body: JSON.stringify({ canvas_width: canvasWidth, paintings: paintings, offset: offset })
         });
 
         if (!response.ok) {
@@ -107,9 +116,14 @@ async function sendData() {
         }
 
         const data = await response.json();
+        if (!data.layout) {
+            resultTextElement.textContent = "Не удалось разместить картины на холсте. Уменьшите отступ или увеличьте ширину холста.";
+            resultTextElement.style.color = "var(--danger-color)";
+            return;
+        }
         resultTextElement.textContent = `Необходимая длина холста: ${data.canvas_length.toFixed(2)} м`;
         resultTextElement.style.color = "var(--success-color)";
-        drawCanvas(canvasWidth, data.layout, data.canvas_length);
+        drawCanvas(canvasWidth, data.layout, data.canvas_length, offset);
     } catch (error) {
         console.error("Ошибка при запросе:", error);
         resultTextElement.textContent = `Произошла ошибка при вычислении: ${error.message}`;
@@ -118,7 +132,7 @@ async function sendData() {
 }
 
 
-function drawCanvas(canvasWidth, layout, canvasLength) {
+function drawCanvas(canvasWidth, layout, canvasLength, offset = 0.05) {
     const svg = document.getElementById("canvas");
     const svgContainerWidthPx = svg.parentElement.clientWidth;
     const scale = svgContainerWidthPx / canvasWidth;
@@ -144,15 +158,17 @@ function drawCanvas(canvasWidth, layout, canvasLength) {
         const color = `hsl(${(index * 37) % 360}, 60%, 75%)`;
 
         const marginRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        marginRect.setAttribute("x", item.x + 0.05);
-        marginRect.setAttribute("y", item.y + 0.05);
-        marginRect.setAttribute("width", item.width - 0.1);
-        marginRect.setAttribute("height", item.height - 0.1);
+        marginRect.setAttribute("x", item.x + offset);
+        marginRect.setAttribute("y", item.y + offset);
+        marginRect.setAttribute("width", Math.max(0, item.width - 2 * offset));
+        marginRect.setAttribute("height", Math.max(0, item.height - 2 * offset));
         marginRect.setAttribute("fill", "none");
         marginRect.setAttribute("stroke", "#999");
         marginRect.setAttribute("stroke-dasharray", "0.01 0.02");
         marginRect.setAttribute("stroke-width", 0.003);
-        svg.appendChild(marginRect);
+        if (offset > 0 && item.width > 2 * offset && item.height > 2 * offset) {
+            svg.appendChild(marginRect);
+        }
 
         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         rect.setAttribute("x", item.x);
