@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Размещение картин на холсте</h1>
+        <div class="page-header">
+            <h1>Размещение картин на холсте</h1>
+            <button type="button" id="helpButton" class="button help-button" aria-haspopup="dialog">Помощь</button>
+        </div>
 
         <div class="input-group">
             <label for="canvasWidth">Ширина холста (в метрах):</label>
@@ -35,6 +38,27 @@
             <svg id="canvas" width="600" height="2000" viewBox="0 0 1.5 3"></svg>
         </div>
     </div>
+
+    <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpDialogTitle">
+        <div class="help-dialog-header">
+            <h2 id="helpDialogTitle">Как пользоваться</h2>
+            <button type="button" id="helpCloseButton" class="help-close-button" aria-label="Закрыть справку">✕</button>
+        </div>
+        <div class="help-dialog-body">
+            <ol>
+                <li>Укажите ширину холста в метрах.</li>
+                <li>Задайте отступ вокруг каждой картины в сантиметрах (по умолчанию 5 см). Отступ применяется с каждой стороны, поэтому расстояние между двумя соседними картинами будет в два раза больше.</li>
+                <li>Добавьте картины: ширину и высоту в метрах, а также нужное количество экземпляров.</li>
+                <li>Нажмите «Рассчитать и визуализировать».</li>
+                <li>Посмотрите необходимую длину холста и схему размещения под формой. Пунктирная линия внутри каждого блока обозначает границу самой картины, а цветной блок включает зарезервированный отступ.</li>
+            </ol>
+
+            <div class="help-note">
+                <p><strong>Важно:</strong> для расчётов серверная часть должна быть запущена на порту <code>8000</code>. Если при нажатии «Рассчитать и визуализировать» появляется ошибка соединения, проверьте, запущен ли сервер.</p>
+                <p>Если вы не знаете, как запустить серверную часть, обратитесь к <a href="https://github.com/ogurec2009/paintings_calc/blob/main/README.md" target="_blank" rel="noopener noreferrer">README.md</a> или к <a href="https://github.com/ogurec2009/paintings_calc" target="_blank" rel="noopener noreferrer">репозиторию проекта</a>.</p>
+            </div>
+        </div>
+    </dialog>
 
     <script src="script.js"></script>
     <script>

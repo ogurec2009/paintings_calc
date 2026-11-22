@@ -199,3 +199,26 @@ function drawCanvas(canvasWidth, layout, canvasLength, offset = 0.05) {
         svg.appendChild(text);
     });
 }
+
+// Help dialog
+const helpDialog = document.getElementById("helpDialog");
+const helpButton = document.getElementById("helpButton");
+const helpCloseButton = document.getElementById("helpCloseButton");
+
+if (helpDialog && helpButton && helpCloseButton) {
+    helpButton.addEventListener("click", () => helpDialog.showModal());
+    helpCloseButton.addEventListener("click", () => helpDialog.close());
+
+    // Close when clicking outside the dialog (on the backdrop)
+    helpDialog.addEventListener("click", (event) => {
+        if (event.target !== helpDialog) {
+            return;
+        }
+        const rect = helpDialog.getBoundingClientRect();
+        const clickedInside = event.clientX >= rect.left && event.clientX <= rect.right &&
+            event.clientY >= rect.top && event.clientY <= rect.bottom;
+        if (!clickedInside) {
+            helpDialog.close();
+        }
+    });
+}

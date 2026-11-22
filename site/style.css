@@ -40,6 +40,116 @@ h2 {
     font-size: 1.6em;
 }
 
+.page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-unit);
+    margin-bottom: calc(1.5 * var(--spacing-unit));
+}
+
+.page-header h1 {
+    margin-bottom: 0;
+}
+
+.help-button {
+    margin-top: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9em;
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
+.help-button:hover {
+    background-color: #5a6268;
+}
+
+.help-dialog {
+    width: min(640px, calc(100% - 2rem));
+    max-height: calc(100vh - 2rem);
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    color: var(--text-color);
+    font-family: var(--font-family);
+}
+
+.help-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.help-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-unit);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.help-dialog-header h2 {
+    margin: 0;
+    font-size: 1.4em;
+    text-align: left;
+}
+
+.help-close-button {
+    padding: 0.25rem;
+    border: none;
+    border-radius: 4px;
+    background: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+.help-close-button:hover {
+    background-color: var(--background-light);
+    color: var(--text-color);
+}
+
+.help-dialog-body {
+    max-height: calc(100vh - 8rem);
+    padding: 1rem 1.25rem 1.25rem;
+    overflow-y: auto;
+}
+
+.help-dialog-body ol {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.help-dialog-body li {
+    margin-bottom: 0.5rem;
+}
+
+.help-dialog-body li:last-child {
+    margin-bottom: 0;
+}
+
+.help-note {
+    margin-top: 1.25rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--background-light);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.help-note p {
+    margin: 0 0 0.5rem;
+}
+
+.help-note p:last-child {
+    margin-bottom: 0;
+}
+
+.help-note a {
+    color: var(--primary-color);
+}
+
 .input-group {
     margin-bottom: var(--spacing-unit);
 }
