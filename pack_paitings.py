@@ -1,7 +1,7 @@
 from typing import List, Tuple
 from itertools import product
 
-DEFAULT_OFFSET = 0.05  # 5 см с каждой стороны
+DEFAULT_OFFSET = 5.0  # 5 см с каждой стороны
 
 def add_margins(w: float, h: float, offset: float = DEFAULT_OFFSET) -> Tuple[float, float]:
     return w + 2 * offset, h + 2 * offset
@@ -61,8 +61,8 @@ def try_layout(canvas_width: float, max_height: float, paintings: List[Tuple[flo
     return layout
 
 def find_min_canvas_length(canvas_width: float, paintings: List[Tuple[float, float]], offset: float = DEFAULT_OFFSET) -> Tuple[float, List[dict]]:
-    low = 0.1
-    high = 20.0
+    low = 10.0
+    high = 2000.0
     best_layout = None
     best_length = high
 
@@ -81,5 +81,5 @@ def find_min_canvas_length(canvas_width: float, paintings: List[Tuple[float, flo
         else:
             low = mid
 
-    return round(best_length, 3), best_layout
+    return round(best_length, 1), best_layout
 

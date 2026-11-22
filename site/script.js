@@ -5,14 +5,14 @@ function addPainting(width = "", height = "", count = 1) {
     const inputW = document.createElement("input");
     inputW.type = "number";
     inputW.placeholder = "Ширина";
-    inputW.step = "0.01";
+    inputW.step = "0.1";
     inputW.value = width;
     inputW.setAttribute("aria-label", "Ширина картины"); // Accessibility
 
     const inputH = document.createElement("input");
     inputH.type = "number";
     inputH.placeholder = "Высота";
-    inputH.step = "0.01";
+    inputH.step = "0.1";
     inputH.value = height;
     inputH.setAttribute("aria-label", "Высота картины"); // Accessibility
 
@@ -70,7 +70,7 @@ function collectPaintings() {
 
 async function sendData() {
     const canvasWidth = parseFloat(document.getElementById("canvasWidth").value);
-    const offsetCm = parseFloat(document.getElementById("paintingOffset").value);
+    const offset = parseFloat(document.getElementById("paintingOffset").value);
     const paintings = collectPaintings();
     const resultTextElement = document.getElementById("resultText");
 
@@ -92,13 +92,11 @@ async function sendData() {
         return;
     }
 
-    if (isNaN(offsetCm) || offsetCm < 0) {
+    if (isNaN(offset) || offset < 0) {
         resultTextElement.textContent = "Пожалуйста, введите корректный неотрицательный отступ.";
         resultTextElement.style.color = "var(--danger-color)";
         return;
     }
-
-    const offset = offsetCm / 100; // сантиметры -> метры
 
     resultTextElement.textContent = "Выполняется расчет...";
     resultTextElement.style.color = "var(--secondary-color)";
@@ -121,7 +119,7 @@ async function sendData() {
             resultTextElement.style.color = "var(--danger-color)";
             return;
         }
-        resultTextElement.textContent = `Необходимая длина холста: ${data.canvas_length.toFixed(2)} м`;
+        resultTextElement.textContent = `Необходимая длина холста: ${data.canvas_length.toFixed(1)} см`;
         resultTextElement.style.color = "var(--success-color)";
         drawCanvas(canvasWidth, data.layout, data.canvas_length, offset);
     } catch (error) {
@@ -132,7 +130,7 @@ async function sendData() {
 }
 
 
-function drawCanvas(canvasWidth, layout, canvasLength, offset = 0.05) {
+function drawCanvas(canvasWidth, layout, canvasLength, offset = 5) {
     const svg = document.getElementById("canvas");
     const svgContainerWidthPx = svg.parentElement.clientWidth;
     const scale = svgContainerWidthPx / canvasWidth;
@@ -151,7 +149,7 @@ function drawCanvas(canvasWidth, layout, canvasLength, offset = 0.05) {
     bg.setAttribute("height", canvasLength);
     bg.setAttribute("fill", "#fef9f4");
     bg.setAttribute("stroke", "#ccc");
-    bg.setAttribute("stroke-width", 0.01);
+    bg.setAttribute("stroke-width", 1);
     svg.appendChild(bg);
 
     layout.forEach((item, index) => {
@@ -164,8 +162,8 @@ function drawCanvas(canvasWidth, layout, canvasLength, offset = 0.05) {
         marginRect.setAttribute("height", Math.max(0, item.height - 2 * offset));
         marginRect.setAttribute("fill", "none");
         marginRect.setAttribute("stroke", "#999");
-        marginRect.setAttribute("stroke-dasharray", "0.01 0.02");
-        marginRect.setAttribute("stroke-width", 0.003);
+        marginRect.setAttribute("stroke-dasharray", "1 2");
+        marginRect.setAttribute("stroke-width", 0.3);
         if (offset > 0 && item.width > 2 * offset && item.height > 2 * offset) {
             svg.appendChild(marginRect);
         }
@@ -177,18 +175,18 @@ function drawCanvas(canvasWidth, layout, canvasLength, offset = 0.05) {
         rect.setAttribute("height", item.height);
         rect.setAttribute("fill", color);
         rect.setAttribute("stroke", "#333");
-        rect.setAttribute("stroke-width", 0.005);
+        rect.setAttribute("stroke-width", 0.5);
         svg.appendChild(rect);
 
         const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
         text.setAttribute("x", item.x + item.width / 2);
-        text.setAttribute("y", item.y + item.height / 2 + 0.01);
+        text.setAttribute("y", item.y + item.height / 2 + 1);
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("fill", "#000");
-	text.textContent = `${item.original[0].toFixed(2)}×${item.original[1].toFixed(2)}${item.rotated ? " ↻" : ""}`;
+	text.textContent = `${item.original[0].toFixed(1)}×${item.original[1].toFixed(1)}${item.rotated ? " ↻" : ""}`;
 
-        // Determine font size in SVG user units (meters)
-        const desiredMinFontSize = 0.008; // This is your desired minimum size in meters
+        // Determine font size in SVG user units (cm)
+        const desiredMinFontSize = 0.8; // This is your desired minimum size in cm
         const dynamicFontSizeFactor = 0.15; // How much of the painting's smaller dimension the text should take
 
         // Calculate font size: either the dynamic size or the desired minimum, whichever is larger.

@@ -18,7 +18,7 @@ app.add_middleware(
 class PaintingsInput(BaseModel):
     canvas_width: float
     paintings: List[List[float]]  
-    offset: float = Field(default=DEFAULT_OFFSET, ge=0)  # отступ с каждой стороны, в метрах
+    offset: float = Field(default=DEFAULT_OFFSET, ge=0)  # отступ с каждой стороны, в сантиметрах
 
 @app.post("/api/pack")
 def pack(input_data: PaintingsInput):
